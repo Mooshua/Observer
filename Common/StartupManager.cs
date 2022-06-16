@@ -29,7 +29,7 @@ public class StartupManager
 	public void Run()
 	{
 
-		var load_ctx = new ObserverData();
+		var load_ctx = new ObserverContext();
 		
 		Console.OutputEncoding = Encoding.UTF8;		
 

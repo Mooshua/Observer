@@ -1,4 +1,5 @@
-﻿using Observer.Common;
+﻿using Observer.Backends;
+using Observer.Common;
 
 using Raven.Client.Documents;
 
@@ -10,7 +11,7 @@ public class CreateRavenTask : LoadTask
 {
 	public override string Name() => "create_raven";
 
-	public override async Task<Result> Run(ObserverData ctx)
+	public override async Task<Result> Run(ObserverContext ctx)
 	{
 		if (ctx.Raven.Enabled)
 		{
@@ -32,6 +33,7 @@ public class CreateRavenTask : LoadTask
 				}.Initialize();
 				CoolLog.WriteSuccess("create_raven", "Created RavenDB connection");
 
+				ctx.Backends.Add(new RavenDbBackend());
 			}
 			catch (Exception e)
 			{

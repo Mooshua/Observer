@@ -6,13 +6,7 @@ using Newtonsoft.Json;
 
 namespace Observer;
 
-public class Emails
-{
 
-	public Emails(MimeMessage m, CancellationToken t)
-	{
-		Mime = new ModelMessage(m, t);
-	}
 
 	public class ModelMessage
 	{
@@ -230,6 +224,8 @@ public class Emails
 		public MessageIdList ThreadChain => _redirect.References;
 
 		public string ThreadParent => _redirect.InReplyTo;
+
+		public Version MimeVersion => _redirect.MimeVersion;
 		
 		#endregion
 
@@ -244,16 +240,4 @@ public class Emails
 		public List<ModelEntity> Attachments = new List<ModelEntity>();
 
 	}
-
-	public string Id = Guid.NewGuid().ToString();
-
-	public string? MessageId => Mime?.MessageId;
-
-	public Version? MimeVersion => Mime?._redirect?.MimeVersion;
 	
-	public DateTime Time { get; set; }
-	
-	public string From { get; set; }
-	
-	public ModelMessage? Mime { get; set; }
-}

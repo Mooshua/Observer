@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <PublishSingleFile>true</PublishSingleFile>
-        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <!--IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract-->
         <DebugType>embedded</DebugType>
         <PublishTrimmed>true</PublishTrimmed>
 
@@ -23,10 +23,6 @@
       <PackageReference Include="RavenDB.Client" Version="5.3.103" />
       <PackageReference Include="SmtpServer" Version="9.0.1" />
       <PackageReference Include="Spectre.Console" Version="0.44.1-preview.0.17" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Backends" />
     </ItemGroup>
 
 </Project>

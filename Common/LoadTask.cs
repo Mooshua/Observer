@@ -11,6 +11,6 @@ public class LoadTask
 
 	public virtual string Name() => "unknown";
 	
-	public async virtual Task<Result> Run(ObserverData ctx) => Result.Good;
+	public async virtual Task<Result> Run(ObserverContext ctx) => Result.Good;
 	
 }

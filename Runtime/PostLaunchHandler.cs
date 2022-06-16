@@ -11,7 +11,7 @@ public class PostLaunchHandler : LoadTask
 		return "observer";
 	}
 
-	public override async Task<Result> Run(ObserverData ctx)
+	public override async Task<Result> Run(ObserverContext ctx)
 	{
 		var cancelToken = new CancellationToken();
 		

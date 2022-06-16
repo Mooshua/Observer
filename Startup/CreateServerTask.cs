@@ -15,7 +15,7 @@ public class CreateServerTask : ConfigTask
 {
 	public override string Name() => "create_server";
 
-	public override async Task<Result> Run(ObserverData ctx)
+	public override async Task<Result> Run(ObserverContext ctx)
 	{
 		try
 		{

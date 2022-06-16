@@ -1,11 +1,16 @@
-﻿using Observer.Config;
+﻿using NLua;
+
+using Observer.Backends;
+using Observer.Config;
 
 using SmtpServer = SmtpServer.SmtpServer;
 
 namespace Observer.Common;
 
-public class ObserverData
+public class ObserverContext
 {
+	
+	public List<IBackend> Backends = new List<IBackend>();
 
 	public global::SmtpServer.SmtpServer? Server;
 
@@ -13,4 +18,7 @@ public class ObserverData
 
 	public RavenDBConfig Raven = new RavenDBConfig();
 
+	public HookConfig Hook = new HookConfig();
+
+	public Lua State = new Lua();
 }
