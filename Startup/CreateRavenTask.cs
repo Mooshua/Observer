@@ -36,6 +36,7 @@ public class CreateRavenTask : LoadTask
 			catch (Exception e)
 			{
 				AnsiConsole.MarkupLine($"Raven err? {e.ToString()}");
+				return Result.Shutdown;
 			}
 		}
 		return Result.Good;

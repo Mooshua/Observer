@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 using Spectre.Console;
 
@@ -29,8 +30,13 @@ public class StartupManager
 	{
 
 		var load_ctx = new ObserverData();
+		
+		Console.OutputEncoding = Encoding.UTF8;		
 
 		AnsiConsole.Status()
+			.AutoRefresh(true)
+			.Spinner(Spinner.Known.Dots2)
+			.SpinnerStyle(Style.Parse("yellow bold"))
 			.StartAsync(CoolLog.ResponsiveTexts[Random.Shared.Next(CoolLog.ResponsiveTexts.Count)], async ctx =>
 			{
 				foreach (LoadTask loadTask in Tasks)
@@ -38,7 +44,7 @@ public class StartupManager
 
 					Stopwatch s = Stopwatch.StartNew();
 
-					ctx.Status($"{CoolLog.ResponsiveTexts[Random.Shared.Next(CoolLog.ResponsiveTexts.Count)]} ({loadTask.Name()})");
+					ctx.Status($"[yellow]{CoolLog.ResponsiveTexts[Random.Shared.Next(CoolLog.ResponsiveTexts.Count)]} ({loadTask.Name()})[/]");
 
 					LoadTask.Result result = LoadTask.Result.Shutdown;
 					try
@@ -51,30 +57,43 @@ public class StartupManager
 						//	Re-throw to carry it to the top
 						throw e;
 					}
-					
+
 					if (result == LoadTask.Result.Good)
 						AnsiConsole.MarkupLine($"[green]{loadTask.Name()}[/] {s.ElapsedMilliseconds}ms");
 
+					if (result == LoadTask.Result.Shutdown)
+					{
+
+						AnsiConsole.MarkupLine("[red]Stopping...[/]");
+
+						throw new Exception();
+					}
+
 				}
-			});
-		
-		foreach (LoadTask loadTask in Post)
-		{
-			AnsiConsole.MarkupLine($"[cyan]post_task[/] {loadTask.Name()}");
-			//var t = new Thread( () =>
-			//{
-				try
+
+				ctx.Spinner = Spinner.Known.Dots2;
+				ctx.Status("[yellow]Listening...[/]");
+
+				foreach (LoadTask loadTask in Post)
 				{
-					loadTask.Run(load_ctx).Wait();
+					AnsiConsole.MarkupLine($"[cyan]post_task[/] {loadTask.Name()}");
+					//var t = new Thread( () =>
+					//{
+					try
+					{
+						loadTask.Run(load_ctx).Wait();
+					}
+					catch (Exception e)
+					{
+						AnsiConsole.MarkupLine($"[red]{loadTask.Name()}[/] {e.Message}");
+					}
+					//}) { IsBackground = false };
+
+					//t.Start();
 				}
-				catch (Exception e)
-				{
-					AnsiConsole.MarkupLine($"[red]{loadTask.Name()}[/] {e.Message}");
-				}
-			//}) { IsBackground = false };
-			
-			//t.Start();
-		}
+			}).Wait();
+
+
 
 	}
 	
