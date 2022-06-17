@@ -10,10 +10,10 @@ namespace Observer;
 
 	public class ModelMessage
 	{
-		public class ModelAddressList :  IList<string>
+		public class ModelAddressList :  IList<object>
 		{
 
-			public class WhyDoIHaveToDoThis : IEnumerator<string>
+			public class WhyDoIHaveToDoThis : IEnumerator<object>
 			{
 				[JsonIgnore]
 				private IEnumerator<InternetAddress> _l;
@@ -28,8 +28,20 @@ namespace Observer;
 					if (!_l.MoveNext())
 						return false;
 
-					Current = _l.Current.Name;
-					
+					switch (_l.Current)
+					{
+						//	This is so scuffed
+						case MailboxAddress mailbox:
+							Current = new string[2] {mailbox.Name, mailbox.GetAddress(true)};
+							break;
+						case GroupAddress group:
+							Current = new object[2] { group.Name, new ModelAddressList(group.Members)};
+							break;
+						default:
+							Current = _l.Current.Name;
+							break;
+					}
+
 					return true;
 				}
 
@@ -39,7 +51,7 @@ namespace Observer;
 					Current = null;
 				}
 
-				public string Current { get; private set; }
+				public object Current { get; private set; }
 
 				object IEnumerator.Current => Current;
 
@@ -58,7 +70,7 @@ namespace Observer;
 			}
 
 
-			public IEnumerator<string> GetEnumerator()
+			public IEnumerator<object> GetEnumerator()
 			{
 				return new WhyDoIHaveToDoThis(List.GetEnumerator());
 			}
@@ -68,7 +80,7 @@ namespace Observer;
 				return GetEnumerator();
 			}
 
-			public void Add(string item)
+			public void Add(object item)
 			{
 				throw new NotImplementedException();
 			}
@@ -78,17 +90,17 @@ namespace Observer;
 				throw new NotImplementedException();
 			}
 
-			public bool Contains(string item)
+			public bool Contains(object item)
 			{
 				throw new NotImplementedException();
 			}
 
-			public void CopyTo(string[] array, int arrayIndex)
+			public void CopyTo(object[] array, int arrayIndex)
 			{
 				throw new NotImplementedException();
 			}
 
-			public bool Remove(string item)
+			public bool Remove(object item)
 			{
 				throw new NotImplementedException();
 			}
@@ -97,12 +109,12 @@ namespace Observer;
 
 			public bool IsReadOnly { get; } = true;
 
-			public int IndexOf(string item)
+			public int IndexOf(object item)
 			{
 				throw new NotImplementedException();
 			}
 
-			public void Insert(int index, string item)
+			public void Insert(int index, object item)
 			{
 				throw new NotImplementedException();
 			}
@@ -112,7 +124,7 @@ namespace Observer;
 				throw new NotImplementedException();
 			}
 
-			public string this[int index]
+			public object this[int index]
 			{
 				get => List[index].Name;
 				set => throw new NotImplementedException();
